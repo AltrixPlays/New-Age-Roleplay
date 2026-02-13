@@ -6,7 +6,6 @@ document.querySelectorAll('nav a').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
 
-        // Get the target section's ID
         const targetId = this.getAttribute('href');
         const targetSection = document.querySelector(targetId);
 
@@ -15,7 +14,6 @@ document.querySelectorAll('nav a').forEach(anchor => {
                 behavior: 'smooth'
             });
 
-            // After scrolling, manually set the active class
             navLinks.forEach(link => link.classList.remove('active'));
             this.classList.add('active');
         }
@@ -31,9 +29,9 @@ const closeButton = document.querySelector('.close-button');
 
 galleryItems.forEach(item => {
     item.addEventListener('click', () => {
-        modal.style.display = 'flex'; // Use flex to center the content
-        modalImage.src = item.dataset.full; // Get full image URL from data-full attribute
-        captionText.innerHTML = item.alt; // Use alt text as caption
+        modal.style.display = 'flex';
+        modalImage.src = item.dataset.full;
+        captionText.innerHTML = item.alt;
     });
 });
 
@@ -41,14 +39,12 @@ closeButton.addEventListener('click', () => {
     modal.style.display = 'none';
 });
 
-// Close modal when clicking outside the image
 modal.addEventListener('click', (e) => {
     if (e.target === modal) {
         modal.style.display = 'none';
     }
 });
 
-// Close modal with Escape key
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && modal.style.display === 'flex') {
         modal.style.display = 'none';
@@ -71,7 +67,6 @@ const navLinks = document.querySelectorAll('nav ul li a');
 
 window.addEventListener('scroll', () => {
     let current = '';
-    // Find the section currently in view
     sections.forEach(section => {
         const sectionTop = section.offsetTop;
         const sectionHeight = section.clientHeight;
@@ -80,7 +75,6 @@ window.addEventListener('scroll', () => {
         }
     });
 
-    // Apply active class to corresponding nav link
     navLinks.forEach(link => {
         link.classList.remove('active');
         if (link.getAttribute('href').includes(current)) {
@@ -90,33 +84,60 @@ window.addEventListener('scroll', () => {
 });
 
 
-// Section Entrance Animations using Intersection Observer (NEW)
-const observer = new IntersectionObserver((entries) => {
+// Section Entrance Animations using Intersection Observer
+const observer = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             entry.target.classList.add('is-visible');
+            // Trigger h2 animation for the current section
+            const h2 = entry.target.querySelector('h2');
+            if (h2) {
+                h2.style.animation = 'none'; // Reset animation
+                void h2.offsetWidth; // Trigger reflow
+                h2.style.animation = null; // Reapply animation
+            }
+            // If you want sections to animate only once, uncomment next line
+            // observer.unobserve(entry.target);
         } else {
-            // Optional: Remove 'is-visible' if you want sections to re-animate on scroll back up
+            // Optional: remove 'is-visible' to re-animate on scroll back up
             // entry.target.classList.remove('is-visible');
         }
     });
-}, { threshold: 0.2 }); // Trigger when 20% of the section is visible
+}, { threshold: 0.2, rootMargin: '0px 0px -10% 0px' }); // Trigger when 20% visible, or 10% from bottom
 
 sections.forEach(section => {
     observer.observe(section);
 });
 
-
-// Optional: Header text fade on scroll (NEW)
-const headerContent = document.querySelector('header .container'); // Select the container with h1, p, button
+// Optional: Header text fade on scroll
+const headerContent = document.querySelector('header .container');
 
 window.addEventListener('scroll', () => {
     const scrollPosition = window.scrollY;
     const headerHeight = document.querySelector('header').offsetHeight;
 
-    // Calculate opacity based on scroll position
-    // Fades out completely when scrolled about 50% of header height
-    const opacity = 1 - (scrollPosition / (headerHeight * 0.5));
-    headerContent.style.opacity = Math.max(0, opacity); // Ensure opacity doesn't go below 0
-    headerContent.style.transform = `translateY(${scrollPosition * 0.2}px)`; // Subtle upward movement
+    const opacity = 1 - (scrollPosition / (headerHeight * 0.4)); // Fades faster
+    headerContent.style.opacity = Math.max(0, opacity);
+    headerContent.style.transform = `translateY(${scrollPosition * 0.3}px)`; // More pronounced upward movement
+});
+
+
+// Ripple effect for buttons (NEW)
+document.querySelectorAll('.button').forEach(button => {
+    button.addEventListener('click', function(e) {
+        const ripple = document.createElement('span');
+        ripple.classList.add('ripple');
+        this.appendChild(ripple);
+
+        const diameter = Math.max(this.clientWidth, this.clientHeight);
+        const radius = diameter / 2;
+
+        ripple.style.width = ripple.style.height = `${diameter}px`;
+        ripple.style.left = `${e.clientX - this.getBoundingClientRect().left - radius}px`;
+        ripple.style.top = `${e.clientY - this.getBoundingClientRect().top - radius}px`;
+
+        ripple.addEventListener('animationend', () => {
+            ripple.remove();
+        });
+    });
 });
