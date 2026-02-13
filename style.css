@@ -1,7 +1,7 @@
 /* General Styling & Variables */
 :root {
-    --primary-color: #2780F5; /* A fresh, appealing green */
-    --secondary-color: #2780F5; /* A complementary blue */
+    --primary-color: #4CAF50; /* A fresh, appealing green */
+    --secondary-color: #3f51b5; /* A complementary blue */
     --accent-color: #FFC107; /* A bright yellow/gold for highlights */
     --dark-bg: #212121; /* Darker background */
     --light-bg: #f5f5f5; /* Lighter background */
@@ -83,7 +83,7 @@ a:hover {
 
 /* Header (Hero Section) */
 header {
-background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://media.discordapp.net/attachments/1400907205083004930/1471715408129167437/Screenshot_2026-02-08_125504.png?ex=698ff148&is=698e9fc8&hm=0b837fa05252742fa270c8a3e3cd44f4cf9448ce2816159182dd8b026c2a1a33&animated=true&width=2197&height=1092') no-repeat center center/cover;
+    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://i.imgur.com/your-awesome-erlc-header.jpg') no-repeat center center/cover; /* REPLACE THIS URL with your actual, high-quality header image */
     color: var(--light-text);
     padding: 150px 0; /* More vertical space */
     text-align: center;
